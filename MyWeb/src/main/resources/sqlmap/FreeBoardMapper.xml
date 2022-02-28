@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  
+  <mapper namespace="com.coding404.freeboard.mapper.FreeBoardMapper">
+  
+  <!-- IDU는 성공시 ture, 실패시 false를 반환시켜준다. -->
+     <insert id="regist">
+        insert into FREEBOARD(bno,writer,title,content) values(FREEBOARD_SEQ.NEXTVAL,#{writer},#{title},#{content})     
+     </insert>	
+     
+     
+     <!-- CDATA안에 들어가는 구문은 순수한 문자열의 형태로 인식 -->
+     
+     <!-- VO의 getter 이름을 가져온다. -->
+     <select id="getList" resultType="FreeBoardVO">
+       <![CDATA[
+    	 select
+    	 *from (select rownum as rn,
+					   a.*
+					   from (select *
+					    	 from freeboard where ]]>	
+			   
+							  <if test="searchType=='title'">title like '%'||#{searchName}||'%'</if>
+							  <if test="searchType=='writer'">writer like '%'||#{searchName}||'%'</if>
+							  <if test="searchType=='content'">content like '%'||#{searchName}||'%'</if>
+							  <if test="searchType=='titcont'">title like '%'||#{searchName}||'%' or content like '%'||#{searchName}||'%'</if>
+							  <if test="searchType==null or searchType=='' or searchName==null or searchName==''">1=1</if>
+		
+						<![CDATA[			
+							order by bno desc)  a)
+							where rn > (#{pageNum}-1)*#{amount} and  rn <= #{pageNum}*#{amount}
+			           	]]>
+     </select>
+     
+    <select id="getTotal" resultType="int">
+        select count(*) as total from freeboard
+        where <if test="searchType=='title'">title like '%'||#{searchName}||'%'</if>
+			   <if test="searchType=='writer'">writer like '%'||#{searchName}||'%'</if>
+			   <if test="searchType=='content'">content like '%'||#{searchName}||'%'</if>
+			   <if test="searchType=='titcont'">title like '%'||#{searchName}||'%' or content like '%'||#{searchName}||'%'</if>
+			   <if test="searchType==null or searchType==''">1=1</if>
+    </select>
+     
+     <select id="getContent" resultType="FreeBoardVO">
+          select *from FREEBOARD where bno = #{bno}      
+     </select>
+     
+     <update id="Update">
+       update freeboard set title=#{title},content=#{content},updatedate=sysdate where bno=#{bno}
+     </update>
+  
+     <delete id="freeDelete">
+         delete from freeboard where bno=#{bno}
+     </delete>
+  
+  
+  </mapper>

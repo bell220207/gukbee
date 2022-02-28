@@ -1,0 +1,33 @@
+create table FREEBOARD (
+   bno number(10),
+   title varchar2(200) not null,
+   writer varchar2(50) not null,
+   content varchar2(2000) not null,
+   regdate date default SYSDATE,
+   updatedate date default SYSDATE   
+);
+
+
+alter table FREEBOARD add CONSTRAINT FREEBOARD_PK PRIMARY KEY (bno);
+
+create SEQUENCE FREEBOARD_SEQ INCREMENT BY 1 START WITH 1 NOCACHE;
+
+//////////////////////////////////////////////////////////////////////
+
+create table USERS(
+  id varchar2(50),
+  pw varchar2(50) not null,
+  name varchar2(50) not null,
+  email1 varchar2(50),
+  email2 varchar2(50),
+  addrzipnum varchar2(50),
+  addrbasic varchar2(300),
+  addrdetail varchar2(300),
+  regdate date default sysdate
+);
+
+alter table users add CONSTRAINT USERS_PK primary key (id);
+
+///////////////////////////////////////////////////////////////////////
+
+devU01TX0FVVEgyMDIxMTAxNDEzMzk0OTExMTc1OTM=
